@@ -1,0 +1,6 @@
+# Dependencies for the application
+# Checkout/build using Carthage
+
+github "Alamofire/Alamofire" ~> 4.0
+github "Alamofire/AlamofireImage" ~> 3.1
+
