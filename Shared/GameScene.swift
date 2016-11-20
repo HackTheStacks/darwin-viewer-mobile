@@ -10,8 +10,7 @@
 import SpriteKit
 
 class GameScene: SKScene {
-    
-    
+
     fileprivate var label : SKLabelNode?
     var selectedNode: SKNode? {
         didSet {
@@ -20,6 +19,14 @@ class GameScene: SKScene {
         }
     }
     var selectedNodeScale: CGFloat = 1.0
+    var selectedNodeRotation: CGFloat = 0.0
+    var selectedNodePosition = CGPoint.zero
+
+    enum PanMoveType {
+        case Sprite
+        case Camera
+    }
+    var selectedPanType = PanMoveType.Camera
 
     lazy var fragmentImages:[UIImage] = {
         return [#imageLiteral(resourceName: "MS-DAR-00002-000-197"), #imageLiteral(resourceName: "MS-DAR-00002-000-199"), #imageLiteral(resourceName: "MS-DAR-00002-000-205")]
@@ -68,8 +75,17 @@ class GameScene: SKScene {
     override func didMove(to view: SKView) {
         self.setUpScene()
 
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+        panGesture.delegate = self
+        self.view?.addGestureRecognizer(panGesture)
+
         let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch))
+        pinchGesture.delegate = self
         self.view?.addGestureRecognizer(pinchGesture)
+
+        let rotateGesture = UIRotationGestureRecognizer(target: self, action: #selector(handleRotate))
+        rotateGesture.delegate = self
+        self.view?.addGestureRecognizer(rotateGesture)
     }
 
     override func update(_ currentTime: TimeInterval) {
@@ -78,70 +94,106 @@ class GameScene: SKScene {
 }
 
 #if os(iOS)
-// Touch-based event handling
+// Gesture event handling
 extension GameScene {
 
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        for t in touches {
-//            print("touch: \(t)")
-//        }
+    func handlePan(gesture:UIPanGestureRecognizer) {
+        let numberOfTouches = gesture.numberOfTouches
+        // if touches > 1, pan the camera
 
-        if let touch = touches.first {
-            self.selectedNode = self.atPoint(touch.location(in: self))
-            self.selectedNode?.removeAllActions()
-        }
-    }
+        switch gesture.state {
+        case .began:
+            let translation = gesture.translation(in: self.view!)
+            if numberOfTouches == 1 {
+                self.selectedPanType = .Sprite
 
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        for t in touches {
-//            print("touch: \(t)")
-//        }
+                let location = gesture.location(in: gesture.view)
+                let nodeLocation = self.convertPoint(fromView: location)
+                let node = self.atPoint(nodeLocation)
+                self.selectedNode = node
 
-        if let touch = touches.first {
-            let touchLoc = touch.location(in:self)
-            let prevTouchLoc = touch.previousLocation(in:self)
+                if let node = self.selectedNode {
+                    self.selectedNodePosition = node.position
+                    // must invert y
+                    node.position = CGPoint(x: selectedNodePosition.x + translation.x, y:selectedNodePosition.y - translation.y)
+                }
+            } else {
+                self.selectedPanType = .Camera
 
-            if let node = self.selectedNode {
-                let newYPos = node.position.y + (touchLoc.y - prevTouchLoc.y)
-                let newXPos = node.position.x + (touchLoc.x - prevTouchLoc.x)
-
-                node.position = CGPoint(x:newXPos, y:newYPos)
+                if let camera = self.camera {
+                    self.selectedNodePosition = camera.position
+                    // must invert x
+                    camera.position = CGPoint(x:selectedNodePosition.x - translation.x, y: selectedNodePosition.y + translation.y)
+                }
             }
+        case .changed:
+            var translation = gesture.translation(in: self.view!)
+            if let camera = self.camera {
+                translation = translation.applying(CGAffineTransform.init(scaleX: camera.xScale, y: camera.yScale))
+            }
+
+            if self.selectedPanType == .Sprite {
+                if let node = self.selectedNode {
+                    // must invert y
+                    node.position = CGPoint(x: selectedNodePosition.x + translation.x, y:selectedNodePosition.y - translation.y)
+                }
+            } else {
+                if let camera = self.camera {
+                    // must invert x
+                    camera.position = CGPoint(x:selectedNodePosition.x - translation.x, y: selectedNodePosition.y + translation.y)
+                }
+            }
+        case .ended:
+            break
+        default:
+            break
+        }
+    }
+    func handlePinch(gesture:UIPinchGestureRecognizer) {
+        switch gesture.state {
+        case .began:
+            if let camera = self.camera {
+                self.selectedNodeScale = camera.xScale
+            }
+
+        case .changed:
+            if let camera = self.camera {
+                camera.setScale(selectedNodeScale / gesture.scale)
+            }
+        case .ended:
+            break
+        default:
+            break
         }
     }
 
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        for t in touches {
-//            print("touch: \(t)")
-//        }
-//        self.selectedNode = nil
-    }
-
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        for t in touches {
-//            print("touch: \(t)")
-//        }
-//        self.selectedNode = nil
-    }
-
-    func handlePinch(gesture:UIPinchGestureRecognizer) {
+    func handleRotate(gesture:UIRotationGestureRecognizer) {
         switch gesture.state {
         case .began:
             let location = gesture.location(in: gesture.view)
             let nodeLocation = self.convertPoint(fromView: location)
             let node = self.atPoint(nodeLocation)
             self.selectedNode = node
-            self.selectedNodeScale = node.xScale
-
+            self.selectedNodeRotation = node.zRotation
+            break
         case .changed:
             if let node = self.selectedNode {
-                node.setScale(selectedNodeScale * gesture.scale) // not likely correct
+                node.zRotation = selectedNodeRotation - gesture.rotation
             }
+            break
         case .ended:
-            self.selectedNode = nil
+            break
         default:
             break
         }
+    }
+}
+
+// MARK: UIGestureRecognizerDelegate
+extension GameScene: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return gestureRecognizer.isKind(of: UIPinchGestureRecognizer.self) && otherGestureRecognizer.isKind(of: UIRotationGestureRecognizer.self) ||
+            gestureRecognizer.isKind(of: UIRotationGestureRecognizer.self) && otherGestureRecognizer.isKind(of: UIPinchGestureRecognizer.self)
     }
 }
 #endif
