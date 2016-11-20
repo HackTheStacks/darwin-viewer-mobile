@@ -73,6 +73,8 @@
 		241F34891DE0F5250018C14C /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				243B958D1DE146A500BDF30D /* Models */,
+				243B958C1DE1469700BDF30D /* API */,
 				241F348A1DE0F5250018C14C /* Actions.sks */,
 				241F348B1DE0F5250018C14C /* GameScene.sks */,
 				241F348C1DE0F5250018C14C /* GameScene.swift */,
@@ -111,6 +113,20 @@
 				241F34AD1DE0F5260018C14C /* Info.plist */,
 			);
 			path = macOS;
+			sourceTree = "<group>";
+		};
+		243B958C1DE1469700BDF30D /* API */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = API;
+			sourceTree = "<group>";
+		};
+		243B958D1DE146A500BDF30D /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -365,7 +381,7 @@
 				PRODUCT_NAME = drag;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Debug;
 		};
@@ -382,7 +398,7 @@
 				PRODUCT_NAME = drag;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -440,6 +456,7 @@
 				241F34BA1DE0F5260018C14C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		241F34BB1DE0F5260018C14C /* Build configuration list for PBXNativeTarget "macOS" */ = {
 			isa = XCConfigurationList;
@@ -448,6 +465,7 @@
 				241F34BD1DE0F5260018C14C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

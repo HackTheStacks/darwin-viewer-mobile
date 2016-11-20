@@ -7,11 +7,6 @@
 //
 
 import SpriteKit
-#if os(watchOS)
-    import WatchKit
-    // <rdar://problem/26756207> SKColor typealias does not seem to be exposed on watchOS SpriteKit
-    typealias SKColor = UIColor
-#endif
 
 class GameScene: SKScene {
     
@@ -29,7 +24,7 @@ class GameScene: SKScene {
         
         // Set the scale mode to scale to fit the window
         scene.scaleMode = .aspectFill
-        
+
         return scene
     }
     
@@ -40,7 +35,7 @@ class GameScene: SKScene {
             label.alpha = 0.0
             label.run(SKAction.fadeIn(withDuration: 2.0))
         }
-        
+
         // Create shape node to use during mouse interaction
         let w = (self.size.width + self.size.height) * 0.05
         self.spinnyNode = SKShapeNode.init(rectOf: CGSize.init(width: w, height: w), cornerRadius: w * 0.3)
@@ -51,30 +46,12 @@ class GameScene: SKScene {
             spinnyNode.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
                                               SKAction.fadeOut(withDuration: 0.5),
                                               SKAction.removeFromParent()]))
-            
-            #if os(watchOS)
-                // For watch we just periodically create one of these and let it spin
-                // For other platforms we let user touch/mouse events create these
-                spinnyNode.position = CGPoint(x: 0.0, y: 0.0)
-                spinnyNode.strokeColor = SKColor.red
-                self.run(SKAction.repeatForever(SKAction.sequence([SKAction.wait(forDuration: 2.0),
-                                                                   SKAction.run({
-                                                                       let n = spinnyNode.copy() as! SKShapeNode
-                                                                       self.addChild(n)
-                                                                   })])))
-            #endif
         }
     }
-    
-    #if os(watchOS)
-    override func sceneDidLoad() {
-        self.setUpScene()
-    }
-    #else
+
     override func didMove(to view: SKView) {
         self.setUpScene()
     }
-    #endif
 
     func makeSpinny(at pos: CGPoint, color: SKColor) {
         if let spinny = self.spinnyNode?.copy() as! SKShapeNode? {
@@ -89,14 +66,14 @@ class GameScene: SKScene {
     }
 }
 
-#if os(iOS) || os(tvOS)
+#if os(iOS)
 // Touch-based event handling
 extension GameScene {
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let label = self.label {
-            label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
-        }
+//        if let label = self.label {
+//            label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
+//        }
         
         for t in touches {
             self.makeSpinny(at: t.location(in: self), color: SKColor.green)
@@ -130,9 +107,9 @@ extension GameScene {
 extension GameScene {
 
     override func mouseDown(with event: NSEvent) {
-        if let label = self.label {
-            label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
-        }
+//        if let label = self.label {
+//            label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
+//        }
         self.makeSpinny(at: event.location(in: self), color: SKColor.green)
     }
     
@@ -144,6 +121,36 @@ extension GameScene {
         self.makeSpinny(at: event.location(in: self), color: SKColor.red)
     }
 
+// none of these seem to be recognized
+//
+//    override func smartMagnify(with event: NSEvent) {
+//        print("event: \(event)")
+//    }
+//    override func magnify(with event: NSEvent) {
+//        print("magnify event: \(event)")
+//    }
+//    override func rotate(with event: NSEvent) {
+//        print("rotate event: \(event)")
+//    }
+//    override func swipe(with event: NSEvent) {
+//        print("event: \(event)")
+//    }
+//
+//    override func beginGesture(with event: NSEvent) {
+//        print("event: \(event)")
+//    }
+//    override func endGesture(with event: NSEvent) {
+//        print("event: \(event)")
+//    }
+//    override func touchesMoved(with event: NSEvent) {
+//        print("event: \(event)")
+//    }
+//    override func touchesBegan(with event: NSEvent) {
+//        print("event: \(event)")
+//    }
+//    override func touchesEnded(with event: NSEvent) {
+//        print("event: \(event)")
+//    }
 }
 #endif
 
