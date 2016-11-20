@@ -25,10 +25,6 @@ class GameViewController: NSViewController {
         
         skView.showsFPS = true
         skView.showsNodeCount = true
-
-        skView.acceptsTouchEvents = true
-
     }
-
 }
 

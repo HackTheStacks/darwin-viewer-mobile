@@ -1,3 +1,4 @@
+
 //
 //  GameScene.swift
 //  drag
@@ -12,7 +13,18 @@ class GameScene: SKScene {
     
     
     fileprivate var label : SKLabelNode?
-    fileprivate var spinnyNode : SKShapeNode?
+    var selectedNode: SKNode? {
+        didSet {
+            oldValue?.zPosition = -1
+            selectedNode?.zPosition = 1
+        }
+    }
+    var selectedNodeScale: CGFloat = 1.0
+
+    lazy var fragmentImages:[UIImage] = {
+        return [#imageLiteral(resourceName: "MS-DAR-00002-000-197"), #imageLiteral(resourceName: "MS-DAR-00002-000-199"), #imageLiteral(resourceName: "MS-DAR-00002-000-205")]
+    }()
+
 
     
     class func newGameScene() -> GameScene {
@@ -36,31 +48,30 @@ class GameScene: SKScene {
             label.run(SKAction.fadeIn(withDuration: 2.0))
         }
 
-        // Create shape node to use during mouse interaction
-        let w = (self.size.width + self.size.height) * 0.05
-        self.spinnyNode = SKShapeNode.init(rectOf: CGSize.init(width: w, height: w), cornerRadius: w * 0.3)
-        
-        if let spinnyNode = self.spinnyNode {
-            spinnyNode.lineWidth = 4.0
-            spinnyNode.run(SKAction.repeatForever(SKAction.rotate(byAngle: CGFloat(M_PI), duration: 1)))
-            spinnyNode.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
-                                              SKAction.fadeOut(withDuration: 0.5),
-                                              SKAction.removeFromParent()]))
+        for image in fragmentImages {
+            let imageNode = SKSpriteNode(texture: SKTexture(image: image))
+            imageNode.setScale(0.3)
+            imageNode.blendMode = .screen
+            imageNode.zPosition = -1
+
+            if let bounds = self.view?.bounds {
+                let windowMiddle = CGPoint(x:bounds.midX, y:bounds.midY)
+                let randX = CGFloat(arc4random_uniform(UInt32(bounds.size.width/2.0))) - windowMiddle.x
+                let randY = CGFloat(arc4random_uniform(UInt32(bounds.size.height/2.0))) - windowMiddle.y
+                imageNode.position = CGPoint(x: randX + windowMiddle.x, y:randY + windowMiddle.y)
+            }
+            self.addChild(imageNode)
         }
+
     }
 
     override func didMove(to view: SKView) {
         self.setUpScene()
+
+        let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch))
+        self.view?.addGestureRecognizer(pinchGesture)
     }
 
-    func makeSpinny(at pos: CGPoint, color: SKColor) {
-        if let spinny = self.spinnyNode?.copy() as! SKShapeNode? {
-            spinny.position = pos
-            spinny.strokeColor = color
-            self.addChild(spinny)
-        }
-    }
-    
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
     }
@@ -71,34 +82,67 @@ class GameScene: SKScene {
 extension GameScene {
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        if let label = self.label {
-//            label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
+//        for t in touches {
+//            print("touch: \(t)")
 //        }
-        
-        for t in touches {
-            self.makeSpinny(at: t.location(in: self), color: SKColor.green)
+
+        if let touch = touches.first {
+            self.selectedNode = self.atPoint(touch.location(in: self))
+            self.selectedNode?.removeAllActions()
         }
     }
-    
+
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches {
-            self.makeSpinny(at: t.location(in: self), color: SKColor.blue)
+//        for t in touches {
+//            print("touch: \(t)")
+//        }
+
+        if let touch = touches.first {
+            let touchLoc = touch.location(in:self)
+            let prevTouchLoc = touch.previousLocation(in:self)
+
+            if let node = self.selectedNode {
+                let newYPos = node.position.y + (touchLoc.y - prevTouchLoc.y)
+                let newXPos = node.position.x + (touchLoc.x - prevTouchLoc.x)
+
+                node.position = CGPoint(x:newXPos, y:newYPos)
+            }
         }
     }
-    
+
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches {
-            self.makeSpinny(at: t.location(in: self), color: SKColor.red)
-        }
+//        for t in touches {
+//            print("touch: \(t)")
+//        }
+//        self.selectedNode = nil
     }
-    
+
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches {
-            self.makeSpinny(at: t.location(in: self), color: SKColor.red)
+//        for t in touches {
+//            print("touch: \(t)")
+//        }
+//        self.selectedNode = nil
+    }
+
+    func handlePinch(gesture:UIPinchGestureRecognizer) {
+        switch gesture.state {
+        case .began:
+            let location = gesture.location(in: gesture.view)
+            let nodeLocation = self.convertPoint(fromView: location)
+            let node = self.atPoint(nodeLocation)
+            self.selectedNode = node
+            self.selectedNodeScale = node.xScale
+
+        case .changed:
+            if let node = self.selectedNode {
+                node.setScale(selectedNodeScale * gesture.scale) // not likely correct
+            }
+        case .ended:
+            self.selectedNode = nil
+        default:
+            break
         }
     }
-    
-   
 }
 #endif
 
@@ -107,18 +151,15 @@ extension GameScene {
 extension GameScene {
 
     override func mouseDown(with event: NSEvent) {
-//        if let label = self.label {
-//            label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
-//        }
-        self.makeSpinny(at: event.location(in: self), color: SKColor.green)
+        print("event: \(event)")
     }
-    
+
     override func mouseDragged(with event: NSEvent) {
-        self.makeSpinny(at: event.location(in: self), color: SKColor.blue)
+        print("event: \(event)")
     }
     
     override func mouseUp(with event: NSEvent) {
-        self.makeSpinny(at: event.location(in: self), color: SKColor.red)
+        print("event: \(event)")
     }
 
 // none of these seem to be recognized

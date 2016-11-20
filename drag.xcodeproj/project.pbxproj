@@ -22,7 +22,42 @@
 		241F34B31DE0F5260018C14C /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241F348C1DE0F5250018C14C /* GameScene.swift */; };
 		241F34B41DE0F5260018C14C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 241F348D1DE0F5250018C14C /* Assets.xcassets */; };
 		241F34B51DE0F5260018C14C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 241F348D1DE0F5250018C14C /* Assets.xcassets */; };
+		243B95A01DE1584600BDF30D /* DarwinApiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243B959F1DE1584600BDF30D /* DarwinApiManager.swift */; };
+		243B95A11DE1584600BDF30D /* DarwinApiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243B959F1DE1584600BDF30D /* DarwinApiManager.swift */; };
+		243B95A51DE17D8500BDF30D /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 243B95A31DE17D8500BDF30D /* Alamofire.framework */; };
+		243B95A61DE17D8500BDF30D /* AlamofireImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 243B95A41DE17D8500BDF30D /* AlamofireImage.framework */; };
+		243B95A91DE17D9400BDF30D /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 243B95A71DE17D9400BDF30D /* Alamofire.framework */; };
+		243B95AA1DE17D9400BDF30D /* AlamofireImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 243B95A81DE17D9400BDF30D /* AlamofireImage.framework */; };
+		243B95AB1DE17DA000BDF30D /* Alamofire.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 243B95A71DE17D9400BDF30D /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		243B95AC1DE17DA000BDF30D /* AlamofireImage.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 243B95A81DE17D9400BDF30D /* AlamofireImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		243B95AD1DE17DA800BDF30D /* Alamofire.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 243B95A31DE17D8500BDF30D /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		243B95AE1DE17DA800BDF30D /* AlamofireImage.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 243B95A41DE17D8500BDF30D /* AlamofireImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		243B95981DE157FB00BDF30D /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				243B95AD1DE17DA800BDF30D /* Alamofire.framework in CopyFiles */,
+				243B95AE1DE17DA800BDF30D /* AlamofireImage.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		243B959C1DE1580D00BDF30D /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				243B95AB1DE17DA000BDF30D /* Alamofire.framework in CopyFiles */,
+				243B95AC1DE17DA000BDF30D /* AlamofireImage.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		241F348A1DE0F5250018C14C /* Actions.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Actions.sks; sourceTree = "<group>"; };
@@ -40,6 +75,11 @@
 		241F34A81DE0F5260018C14C /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		241F34AB1DE0F5260018C14C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		241F34AD1DE0F5260018C14C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		243B959F1DE1584600BDF30D /* DarwinApiManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DarwinApiManager.swift; sourceTree = "<group>"; };
+		243B95A31DE17D8500BDF30D /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = SOURCE_ROOT; };
+		243B95A41DE17D8500BDF30D /* AlamofireImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlamofireImage.framework; path = Carthage/Build/iOS/AlamofireImage.framework; sourceTree = SOURCE_ROOT; };
+		243B95A71DE17D9400BDF30D /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/Mac/Alamofire.framework; sourceTree = SOURCE_ROOT; };
+		243B95A81DE17D9400BDF30D /* AlamofireImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlamofireImage.framework; path = Carthage/Build/Mac/AlamofireImage.framework; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +87,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				243B95A51DE17D8500BDF30D /* Alamofire.framework in Frameworks */,
+				243B95A61DE17D8500BDF30D /* AlamofireImage.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -54,6 +96,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				243B95A91DE17D9400BDF30D /* Alamofire.framework in Frameworks */,
+				243B95AA1DE17D9400BDF30D /* AlamofireImage.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -95,6 +139,8 @@
 		241F34941DE0F5250018C14C /* iOS */ = {
 			isa = PBXGroup;
 			children = (
+				243B95A31DE17D8500BDF30D /* Alamofire.framework */,
+				243B95A41DE17D8500BDF30D /* AlamofireImage.framework */,
 				241F34951DE0F5260018C14C /* AppDelegate.swift */,
 				241F34971DE0F5260018C14C /* GameViewController.swift */,
 				241F34991DE0F5260018C14C /* Main.storyboard */,
@@ -107,6 +153,8 @@
 		241F34A51DE0F5260018C14C /* macOS */ = {
 			isa = PBXGroup;
 			children = (
+				243B95A71DE17D9400BDF30D /* Alamofire.framework */,
+				243B95A81DE17D9400BDF30D /* AlamofireImage.framework */,
 				241F34A61DE0F5260018C14C /* AppDelegate.swift */,
 				241F34A81DE0F5260018C14C /* GameViewController.swift */,
 				241F34AA1DE0F5260018C14C /* Main.storyboard */,
@@ -118,6 +166,7 @@
 		243B958C1DE1469700BDF30D /* API */ = {
 			isa = PBXGroup;
 			children = (
+				243B959F1DE1584600BDF30D /* DarwinApiManager.swift */,
 			);
 			name = API;
 			sourceTree = "<group>";
@@ -139,6 +188,7 @@
 				241F348E1DE0F5250018C14C /* Sources */,
 				241F348F1DE0F5250018C14C /* Frameworks */,
 				241F34901DE0F5250018C14C /* Resources */,
+				243B95981DE157FB00BDF30D /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -156,6 +206,7 @@
 				241F34A01DE0F5260018C14C /* Sources */,
 				241F34A11DE0F5260018C14C /* Frameworks */,
 				241F34A21DE0F5260018C14C /* Resources */,
+				243B959C1DE1580D00BDF30D /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -241,6 +292,7 @@
 				241F34B21DE0F5260018C14C /* GameScene.swift in Sources */,
 				241F34981DE0F5260018C14C /* GameViewController.swift in Sources */,
 				241F34961DE0F5260018C14C /* AppDelegate.swift in Sources */,
+				243B95A01DE1584600BDF30D /* DarwinApiManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -251,6 +303,7 @@
 				241F34B31DE0F5260018C14C /* GameScene.swift in Sources */,
 				241F34A91DE0F5260018C14C /* GameViewController.swift in Sources */,
 				241F34A71DE0F5260018C14C /* AppDelegate.swift in Sources */,
+				243B95A11DE1584600BDF30D /* DarwinApiManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -374,6 +427,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 824JWW49RP;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/iOS",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -391,6 +449,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 824JWW49RP;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/iOS",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -410,6 +473,11 @@
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 824JWW49RP;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/macOS",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INFOPLIST_FILE = macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
@@ -427,6 +495,11 @@
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 824JWW49RP;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/macOS",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INFOPLIST_FILE = macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
