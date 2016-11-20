@@ -71,13 +71,15 @@
       "scale" : "2x"
     },
     {
-      "idiom" : "ipad",
       "size" : "76x76",
+      "idiom" : "ipad",
+      "filename" : "darWin Icon.png",
       "scale" : "1x"
     },
     {
-      "idiom" : "ipad",
       "size" : "76x76",
+      "idiom" : "ipad",
+      "filename" : "darWin Icon@2x.png",
       "scale" : "2x"
     },
     {
@@ -181,6 +183,10 @@
       "idiom" : "mac",
       "size" : "512x512",
       "scale" : "2x"
+    },
+    {
+      "filename" : "darWin Icon@3x.png",
+      "unassigned" : true
     }
   ],
   "info" : {

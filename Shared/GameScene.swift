@@ -33,11 +33,25 @@ class GameScene: SKScene {
     }
     var selectedPanType = PanMoveType.Camera
 
-    lazy var fragmentImages:[UIImage] = {
-        return [#imageLiteral(resourceName: "MS-DAR-00002-000-197"), #imageLiteral(resourceName: "MS-DAR-00002-000-199"), #imageLiteral(resourceName: "MS-DAR-00002-000-205")]
+
+    lazy var demoFragmentModels:[FragmentModel] = {
+        let matchNames = ["MS-DAR-00002-000-197", "MS-DAR-00002-000-205"]
+        let fragmentModel = FragmentModel(id: "MS-DAR-00002-000-199", url: "")
+        fragmentModel.matches = matchNames.map { name -> MatchModel in
+            return MatchModel(id: name, edge: "")
+        }
+        let matchNames1 = ["MS-DAR-00070-000-352", "MS-DAR-00070-000-355"]
+        let fragmentModel1 = FragmentModel(id: "MS-DAR-00070-000-366", url: "")
+        fragmentModel1.matches = matchNames1.map { name -> MatchModel in
+            return MatchModel(id: name, edge: "")
+        }
+        return [fragmentModel, fragmentModel1]
     }()
 
-    var matchSet = Set<String>()
+    var fragmentIndex = 0
+    var fragments: [FragmentModel]?
+    var currentFragment: FragmentModel?
+    var matchesSet = Set<MatchModel>()
 
     
     class func newGameScene() -> GameScene {
@@ -66,18 +80,18 @@ class GameScene: SKScene {
         self.instructionsNode = self.childNode(withName: "//instructionsNode")
         if let instructions = self.instructionsNode {
             instructions.alpha = 0.0
-            let delay = SKAction.wait(forDuration: 2.0)
-            instructions.run(SKAction.group([delay,
-                                             SKAction.fadeIn(withDuration: 2.0)]))
+            let delay = SKAction.wait(forDuration: 1.0)
+            instructions.run(SKAction.sequence([delay,
+                                             SKAction.fadeIn(withDuration: 1.0)]))
         }
         self.startButton = self.childNode(withName: "//startButton") as? SKLabelNode
         if let startButton = self.startButton {
             startButton.alpha = 0.0
-            let delay = SKAction.wait(forDuration: 3.0)
+            let delay = SKAction.wait(forDuration: 2.0)
             let fadeIn = SKAction.fadeIn(withDuration: 1.0)
             let dim = SKAction.fadeAlpha(to: 0.5, duration: 1.0)
-            let pulseAction = SKAction.group([fadeIn, dim])
-            startButton.run(SKAction.group([
+            let pulseAction = SKAction.sequence([fadeIn, dim])
+            startButton.run(SKAction.sequence([
                 delay,
                 pulseAction,
                 SKAction.repeatForever(pulseAction),
@@ -115,22 +129,96 @@ class GameScene: SKScene {
 
 // MARK: Data loading
 extension GameScene {
-    func loadImages() {
+
+    func submitMatch() -> Bool {
+        guard let _ = self.currentFragment, self.matchesSet.count > 0 else {
+            return false
+        }
+        // submit fragment / match id upvote
+        return true
+    }
+
+    func showNextFragment() {
+        guard let fragments = self.fragments, fragments.count > 0 else {
+            print("no fragments to show")
+            return
+        }
+
+        if (self.currentFragment != nil) {
+            fragmentIndex += 1
+            if fragmentIndex >= fragments.count {
+                fragmentIndex = 0
+            }
+            
+            // hide current fragments
+            let fadeOut = SKAction.fadeOut(withDuration: 0.5)
+            let fadeIn = SKAction.fadeIn(withDuration: 0.5)
+            let loadNext = SKAction.run { [weak self] in
+                if let weakself = self {
+                    weakself.imageNodes?.removeAllChildren()
+                    let nextFragment = fragments[weakself.fragmentIndex]
+                    weakself.currentFragment = nextFragment
+                    weakself.loadFragment(fragment: nextFragment)
+                }
+            }
+            self.imageNodes?.run(SKAction.sequence([fadeOut, loadNext, fadeIn]))
+            if let camera = self.camera {
+                let move = SKAction.move(to: CGPoint.zero, duration: 0.5)
+                let scale = SKAction.scale(to: 1.0, duration: 0.5)
+                camera.run(SKAction.group([move, scale]))
+            }
+        } else {
+            let nextFragment = fragments[self.fragmentIndex]
+            self.currentFragment = nextFragment
+            self.loadFragment(fragment: nextFragment)
+        }
+
+    }
+
+    func loadFragment(fragment:FragmentModel) {
+        // get the fragment image, display it
+        // get the match images, display them
         if UseLocalImages {
-            for image in fragmentImages {
-                let imageNode = SKSpriteNode(texture: SKTexture(image: image))
+            var lastPosition = CGPoint.zero
+
+            if let fragmentImage = UIImage(named: fragment.identifier) {
+                let imageNode = SKSpriteNode(texture: SKTexture(image: fragmentImage))
+                imageNode.name = String(fragment.hashValue)
                 imageNode.setScale(0.3)
                 imageNode.blendMode = .screen
                 imageNode.zPosition = -1
+                imageNode.position = imageNode.position.applying(CGAffineTransform.init(translationX: 0, y: 100))
+                lastPosition = CGPoint(x: lastPosition.x, y: lastPosition.y - imageNode.size.height/2.0)
 
-                if let bounds = self.view?.bounds {
-                    let windowMiddle = CGPoint(x:bounds.midX, y:bounds.midY)
-                    let randX = CGFloat(arc4random_uniform(UInt32(bounds.size.width/2.0))) - windowMiddle.x
-                    let randY = CGFloat(arc4random_uniform(UInt32(bounds.size.height/2.0))) - windowMiddle.y
-                    imageNode.position = CGPoint(x: randX + windowMiddle.x, y:randY + windowMiddle.y)
-                }
                 self.imageNodes?.addChild(imageNode)
             }
+
+            if let matches = fragment.matches {
+                for matchModel in matches {
+                    if let matchImage = UIImage(named: matchModel.identifier) {
+                        let imageNode = SKSpriteNode(texture: SKTexture(image: matchImage))
+                        imageNode.name = String(matchModel.hashValue)
+                        imageNode.setScale(0.3)
+                        imageNode.alpha = 0.5
+                        imageNode.blendMode = .screen
+                        imageNode.zPosition = -1
+                        imageNode.position = lastPosition
+                        lastPosition = CGPoint(x: lastPosition.x, y: lastPosition.y - imageNode.size.height/2.0)
+
+                        self.imageNodes?.addChild(imageNode)
+                    }
+                }
+            }
+        } else {
+            // load from API
+        }
+
+    }
+
+    func loadImages() {
+        if UseLocalImages {
+            self.fragments = demoFragmentModels
+            showNextFragment()
         } else {
             DarwinApiManager.fragments { [weak self] (fragments, success) in
                 guard success else {
@@ -144,7 +232,15 @@ extension GameScene {
                     return matches.count > 0
                 })
 
+                if let weakSelf = self {
+                    weakSelf.fragments = fragmentsWithMatches
+                }
+
                 if let firstFragment = fragmentsWithMatches?.first {
+                    if let weakSelf = self {
+                        weakSelf.currentFragment = firstFragment
+                    }
+
                     var lastPosition = CGPoint.zero
                     var lastSize = CGSize.zero
 
@@ -159,35 +255,34 @@ extension GameScene {
                             imageNode.zPosition = -1
                             weakSelf.imageNodes?.addChild(imageNode)
 
-                            weakSelf.matchSet.insert(firstFragment.identifier)
-
                             lastPosition = imageNode.position
                             lastSize = imageNode.size
                         }
+
+                        if let matches = firstFragment.matches {
+                            for match in matches {
+                                DarwinApiManager.fragmentImage(identifier: match.targetId!, callback: { (matchImage, success) in
+                                    guard success, let image = matchImage else { return }
+
+                                    if let weakSelf = self {
+                                        let imageNode = SKSpriteNode(texture: SKTexture(image: image))
+                                        imageNode.name = String(match.hashValue)
+                                        imageNode.setScale(0.3)
+                                        imageNode.blendMode = .screen
+                                        imageNode.alpha = 0.5
+                                        imageNode.zPosition = -1
+
+                                        imageNode.position = CGPoint(x: lastPosition.x, y: lastPosition.y - lastSize.height)
+                                        lastPosition = imageNode.position
+                                        lastSize = imageNode.size
+
+                                        weakSelf.imageNodes?.addChild(imageNode)
+                                    }
+                                })
+                            }
+                        }
                     })
 
-                    if let matches = firstFragment.matches {
-                        for match in matches {
-                            DarwinApiManager.fragmentImage(identifier: match.identifier, callback: { (matchImage, success) in
-                                guard success, let image = matchImage else { return }
-
-                                if let weakSelf = self {
-                                    let imageNode = SKSpriteNode(texture: SKTexture(image: image))
-                                    imageNode.name = match.identifier
-                                    imageNode.setScale(0.3)
-                                    imageNode.blendMode = .screen
-                                    // imageNode.alpha = 0.5
-                                    imageNode.zPosition = -1
-
-                                    imageNode.position = CGPoint(x: lastPosition.x, y: lastPosition.y - lastSize.height)
-                                    lastPosition = imageNode.position
-                                    lastSize = imageNode.size
-
-                                    weakSelf.imageNodes?.addChild(imageNode)
-                                }
-                            })
-                        }
-                    }
                 }
             }
         }
@@ -204,7 +299,7 @@ extension GameScene {
         let node = self.atPoint(nodeLocation)
 
         if let button = self.startButton, button == node {
-            let fadeOut = SKAction.fadeOut(withDuration: 0.5)
+            let fadeOut = SKAction.fadeOut(withDuration: 0.3)
             self.instructionsNode?.run(fadeOut)
             self.startButton?.removeAllActions()
             self.startButton?.run(fadeOut)
@@ -218,15 +313,15 @@ extension GameScene {
         let node = self.atPoint(nodeLocation)
 
         if let sprite = node as? SKSpriteNode, let parent = node.parent, parent == self.imageNodes {
-            if let name = sprite.name {
-                if self.matchSet.contains(name) {
+            if let matchHash = sprite.name, let match = currentFragment?.matchWithHashValue(hashString: matchHash) {
+                if self.matchesSet.contains(match) {
                     // deactivate node
                     sprite.run(SKAction.fadeAlpha(to: 0.5, duration: 0.3))
-                    self.matchSet.remove(name)
+                    self.matchesSet.remove(match)
                 } else {
                     // activate node
                     sprite.run(SKAction.fadeIn(withDuration: 0.3))
-                    self.matchSet.insert(name)
+                    self.matchesSet.insert(match)
                 }
             }
         }

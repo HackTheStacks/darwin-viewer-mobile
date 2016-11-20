@@ -20,6 +20,14 @@ class FragmentModel: NSObject {
         imageUrl = url
         super.init()
     }
+
+    func matchWithHashValue(hashString:String) -> MatchModel? {
+        guard let matches = self.matches, matches.count > 0 else { return nil }
+        let results = matches.filter({match -> Bool in
+            print(match.hashValue)
+            return String(match.hashValue) == hashString})
+        return results.first
+    }
 }
 
 class MatchModel: NSObject {
