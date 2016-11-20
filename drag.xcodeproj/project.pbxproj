@@ -32,6 +32,8 @@
 		243B95AC1DE17DA000BDF30D /* AlamofireImage.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 243B95A81DE17D9400BDF30D /* AlamofireImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		243B95AD1DE17DA800BDF30D /* Alamofire.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 243B95A31DE17D8500BDF30D /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		243B95AE1DE17DA800BDF30D /* AlamofireImage.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 243B95A41DE17D8500BDF30D /* AlamofireImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		243B95B01DE19E6C00BDF30D /* FragmentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243B95AF1DE19E6C00BDF30D /* FragmentModel.swift */; };
+		243B95B11DE19E6C00BDF30D /* FragmentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243B95AF1DE19E6C00BDF30D /* FragmentModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -80,6 +82,7 @@
 		243B95A41DE17D8500BDF30D /* AlamofireImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlamofireImage.framework; path = Carthage/Build/iOS/AlamofireImage.framework; sourceTree = SOURCE_ROOT; };
 		243B95A71DE17D9400BDF30D /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/Mac/Alamofire.framework; sourceTree = SOURCE_ROOT; };
 		243B95A81DE17D9400BDF30D /* AlamofireImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlamofireImage.framework; path = Carthage/Build/Mac/AlamofireImage.framework; sourceTree = SOURCE_ROOT; };
+		243B95AF1DE19E6C00BDF30D /* FragmentModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FragmentModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -174,6 +177,7 @@
 		243B958D1DE146A500BDF30D /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				243B95AF1DE19E6C00BDF30D /* FragmentModel.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -293,6 +297,7 @@
 				241F34981DE0F5260018C14C /* GameViewController.swift in Sources */,
 				241F34961DE0F5260018C14C /* AppDelegate.swift in Sources */,
 				243B95A01DE1584600BDF30D /* DarwinApiManager.swift in Sources */,
+				243B95B01DE19E6C00BDF30D /* FragmentModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -304,6 +309,7 @@
 				241F34A91DE0F5260018C14C /* GameViewController.swift in Sources */,
 				241F34A71DE0F5260018C14C /* AppDelegate.swift in Sources */,
 				243B95A11DE1584600BDF30D /* DarwinApiManager.swift in Sources */,
+				243B95B11DE19E6C00BDF30D /* FragmentModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
